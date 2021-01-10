@@ -1,12 +1,20 @@
-{ kor, hyraizyn, pkgs, lib, ... }:
+{ config, kor, hyraizyn, uyrld, pkgs, lib, ... }:
 let
-  inherit (kor) eksportJSON;
-  inherit (lib) mkOverride;
+  inherit (kor) mapAttrsToList eksportJSON;
+  inherit (lib) concatStringsSep mkOverride;
 
-  inherit (hyraizyn) astra;
+  inherit (hyraizyn) astra exAstriz;
 
   jsonHyraizynFail = eksportJSON "hyraizyn.json" hyraizyn;
   chipSetIsIntel = true; # TODO
+
+  uniksOSShell = uyrld.mksh + uyrld.mksh.shellPath;
+
+  mkAstriKnownHost = n: astri:
+    concatStringsSep " " [ astri.uniksNeim astri.eseseitc ];
+
+  sshKnownHosts = concatStringsSep "\n"
+    (mapAttrsToList mkAstriKnownHost exAstriz);
 
 in
 {
@@ -18,9 +26,27 @@ in
     supportedFilesystems = mkOverride 50 [ "xfs" "btrfs" ]; # TODO remove btrfs
   };
 
-  environment.etc."hyraizyn.json" = {
-    source = jsonHyraizynFail;
-    mode = "0600";
+  documentation = {
+    enable = !config.boot.isContainer;
+    nixos.enable = !config.boot.isContainer;
+  };
+
+  environment = {
+    binsh = uniksOSShell;
+    shells = [ "/run/current-system/sw${uyrld.mksh.shellPath}" ];
+
+    etc = {
+      "ssh/ssh_known_hosts".text = sshKnownHosts;
+      "hyraizyn.json" = {
+        source = jsonHyraizynFail;
+        mode = "0600";
+      };
+    };
+
+    systemPackages = [
+      uyrld.termite.terminfo
+      pkgs.lm_sensors
+    ];
   };
 
   networking = {
@@ -45,5 +71,7 @@ in
       withHomed = true;
     };
   };
+
+  time.timeZone = lib.mkOverride 1000 "UTC";
 
 }

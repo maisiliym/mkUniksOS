@@ -9,10 +9,11 @@
     }@fleiks:
 
     {
-      datom = { hyraizyn, isoImydj ? false }:
+      datom = { hyraizyn }:
         let
           kor = fleiks.kor.datom;
           inherit (kor) optional;
+          inherit (hyraizyn.astra.spinyrz) izEdj izHaibrid;
 
           revz = {
             nixos = gluNixOS.datom.nixosRev;
@@ -23,8 +24,10 @@
           niksModule = import ./niks.nix;
           normylaizModule = import ./normylaiz.nix;
           neksisModule = import ./neksis;
+          edjModule = import ./edj;
 
-          iuzIsoConfig = !iuzPodConfig && isoImydj ||
+          iuzEdjModjyl = izEdj || izHaibrid;
+          iuzIsoConfig = !iuzPodConfig &&
             (hyraizyn.astra.io.disks == { });
 
           iuzPodConfig = (hyraizyn.astra.mycin.spici == "pod");
@@ -37,7 +40,7 @@
             then import ./liveIso.nix
             else import ./priInstyld.nix;
 
-          metylModule = import ./metyl.nix;
+          metylModule = import ./metyl;
 
           nixosConfigz = [
             krimynzModule
@@ -45,10 +48,10 @@
             niksModule
             normylaizModule
             neksisModule
-          ] ++
-          (optional iuzIsoConfig gluNixOS.datom.isoImageModule)
-          ++
-          (optional iuzMetylConfig metylModule);
+          ]
+          ++ (optional iuzIsoConfig gluNixOS.datom.isoImageModule)
+          ++ (optional iuzEdjModjyl edjModule)
+          ++ (optional iuzMetylConfig metylModule);
 
           ival = mkIval.datom { inherit hyraizyn; };
 
@@ -63,7 +66,7 @@
           bildUniksOSIso = evalUniksOS.config.system.build.isoImage;
 
         in
-        if isoImydj then bildUniksOSIso
+        if iuzIsoConfig then bildUniksOSIso
         else bildUniksOS;
 
     };

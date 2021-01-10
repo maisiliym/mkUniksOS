@@ -12,6 +12,8 @@ let
   yggCtlExec = "${pkgs.yggdrasil}/bin/yggdrasilctl";
   jqEksek = "${pkgs.jq}/bin/jq";
 
+  yggKriodFilterSocket = fileSystem.systemd.runtimeDirectory + "/yggKriodFilter";
+
   mkConfigFile = conf: pkgs.writeTextFile {
     name = "yggdrasilConf.json";
     text = builtins.toJSON conf;
@@ -36,22 +38,22 @@ in
     services = {
       kriodaizYggdrasil = mkIf (!izYggKriodaizd) {
         description = "Generate Yggdrasil kriod";
-        wantedBy = [ "neksis-yggdrasil.service" ];
+        before = [ "yggKriodFilter.socket" ];
         serviceConfig = {
           ExecStart = "${yggExec} -genconf -json";
-          StandardOutput = "fd:yggKriodFilter.socket";
+          StandardOutput = "file:${yggKriodFilterSocket}";
         };
       };
 
       yggKriodFilter = mkIf (!izYggKriodaizd) {
         description = "Filter generated yggdrasil kriod";
-        requiredBy = [ "kombainYggKonfig.service" ];
         before = [ "kombainYggKonfig.service" ];
         serviceConfig = {
           ExecStart = "${jqEksek} '{ EncryptionPublicKey, EncryptionPrivateKey, SigningPublicKey, SigningPrivateKey }'";
-          StandardInput = "fd:yggKriodFilter.socket";
-          StandardOutput = "fd:${priKriodJson}";
-
+          Sockets = "yggKriodFilter.socket";
+          StandardInput = "socket";
+          # StandardOutput = "file:${priKriodJson}";
+          StandardOutput = "journal";
         };
       };
 
@@ -61,7 +63,7 @@ in
         before = [ "neksis-yggdrasil.service" ];
         serviceConfig = {
           ExecStart = "${jqEksek} --slurp add ${priKriodJson} ${configFile}";
-          StandardOutput = "fd:${combinedConfigJson}";
+          StandardOutput = "file:${combinedConfigJson}";
         };
       };
 
@@ -91,13 +93,13 @@ in
         };
       };
 
-      ekstraktYggDatom = mkIf (!izYggKriodaizd) {
-        description = "Extract generated yggdrasil datom";
-        serviceConfig = {
-          ExecStart = " ${yggCtlExec} -json -v getself";
-          StandardOutput = "fd:${datomJson}";
-        };
-      };
+      # ekstraktYggDatom = mkIf (!izYggKriodaizd) {
+      #   description = "Extract generated yggdrasil datom";
+      #   serviceConfig = {
+      #     ExecStart = " ${yggCtlExec} -json -v getself";
+      #     StandardOutput = "file:${datomJson}";
+      #   };
+      # };
 
     };
 
@@ -105,7 +107,7 @@ in
       yggKriodFilter = mkIf (!izYggKriodaizd) {
         description = "Capture pre-filtered yggdrasil kriod";
         socketConfig = {
-          ListenFIFO = fileSystem.systemd.runtimeDirectory + "/yggKriodFilter";
+          ListenFIFO = yggKriodFilterSocket;
           SocketMode = "0600";
         };
       };

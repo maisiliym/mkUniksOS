@@ -1,4 +1,4 @@
-{ pkgs, hyraizyn, config, kor, revz, ... }:
+{ pkgs, lib, hyraizyn, config, kor, revz, ... }:
 let
   inherit (lib) mkOverride;
 
@@ -17,4 +17,3 @@ in
   };
 
 }
-

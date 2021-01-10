@@ -24,7 +24,7 @@ let
       useDefaultShell = true;
       isNormalUser = true;
 
-      openssh.authorizedKeys.keys = mkIf hazPriKriom eseseitcyz;
+      openssh.authorizedKeys.keys = eseseitcyz;
 
       extraGroups = [ "audio" ]
         ++
