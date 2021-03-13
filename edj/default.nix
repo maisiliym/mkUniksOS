@@ -66,6 +66,8 @@ in
       gnome-keyring.enable = mkOverride 10 false;
     };
 
+    tumbler.enable = saizAtList.med;
+
     xserver = {
       enable = saizAtList.med;
       displayManager = {
