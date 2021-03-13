@@ -1,4 +1,4 @@
-{ kor, pkgs, hyraizyn, uyrld, redjistri, konstynts, ... }:
+{ kor, pkgs, hyraizyn, uyrld, konstynts, ... }:
 let
   inherit (builtins) mapAttrs attrNames filter;
   inherit (kor) optionals mkIf optional eksportJSON;
@@ -13,6 +13,8 @@ let
   inherit (konstynts.network.niks) serve;
 
   jsonHyraizynFail = eksportJSON "hyraizyn.json" hyraizyn;
+
+  redjistri = "";
 
 in
 {
@@ -31,7 +33,7 @@ in
   };
 
   nix = {
-    package = uyrld.nix;
+    package = uyrld.pkdjz.nix;
 
     trustedUsers = [ "root" "@nixdev" ];
 

@@ -1,4 +1,4 @@
-{ hyraizyn, config, kor, uyrld, ... }:
+{ hyraizyn, config, kor, pkgs, ... }:
 let
   inherit (builtins) filter mapAttrs attrNames hasAttr
     concatStringsSep concatMap;
@@ -56,7 +56,7 @@ in
   users = {
     users = mkKrimynUsers // rootUserAkses;
 
-    defaultUserShell = uyrld.mksh;
+    defaultUserShell = pkgs.mksh;
 
   };
 

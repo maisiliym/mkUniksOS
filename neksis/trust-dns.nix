@@ -3,11 +3,10 @@
 let
   inherit (builtins) map;
   inherit (lib) mkOverride;
-  inherit (uyrld.niksLib) toFormatFile;
-
   inherit (hyraizyn.astra) uniksNeim;
+  inherit (uyrld.pkdjz) trust-dns;
 
-  trustDnsEksek = "${uyrld.trust-dns.trust-dns}/bin/named";
+  trustDnsEksek = "${trust-dns}/bin/named";
 
   astraZone = {
     zone = uniksNeim;

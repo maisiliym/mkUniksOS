@@ -1,7 +1,7 @@
-{ self, kor, uyrld, pkdjz, hyraizyn }:
+{ self, kor, uyrld, hyraizyn }:
 let
   inherit (kor) optional;
-  inherit (pkdjz) ivalNixos;
+  inherit (uyrld.pkdjz) ivalNixos;
   inherit (hyraizyn.astra.spinyrz) izEdj izHaibrid;
   inherit (hyraizyn.astra) mycin io;
 
@@ -39,7 +39,7 @@ let
     ++ (optional iuzMetylModule metylModule);
 
   nixosArgs = {
-    inherit kor pkdjz uyrld hyraizyn;
+    inherit kor uyrld hyraizyn;
     uniksOSRev = self.shortRev;
   };
 

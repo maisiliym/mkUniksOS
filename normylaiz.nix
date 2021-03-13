@@ -1,14 +1,14 @@
-{ config, kor, hyraizyn, uyrld, pkgs, lib, ... }:
+{ config, kor, hyraizyn, pkgs, lib, ... }:
 let
   inherit (kor) mapAttrsToList eksportJSON;
   inherit (lib) concatStringsSep mkOverride;
-
+  inherit (pkgs) mksh;
   inherit (hyraizyn) astra exAstriz;
 
   jsonHyraizynFail = eksportJSON "hyraizyn.json" hyraizyn;
   chipSetIsIntel = true; # TODO
 
-  uniksOSShell = uyrld.mksh + uyrld.mksh.shellPath;
+  uniksOSShell = mksh + mksh.shellPath;
 
   mkAstriKnownHost = n: astri:
     concatStringsSep " " [ astri.uniksNeim astri.eseseitc ];
@@ -33,7 +33,7 @@ in
 
   environment = {
     binsh = uniksOSShell;
-    shells = [ "/run/current-system/sw${uyrld.mksh.shellPath}" ];
+    shells = [ "/run/current-system/sw${mksh.shellPath}" ];
 
     etc = {
       "ssh/ssh_known_hosts".text = sshKnownHosts;
@@ -44,7 +44,7 @@ in
     };
 
     systemPackages = [
-      uyrld.termite.terminfo
+      termite.terminfo
       pkgs.lm_sensors
     ];
   };

@@ -1,10 +1,8 @@
-{ config, lib, pkgs, kor, hyraizyn, uyrld, ... }:
+{ config, lib, pkgs, kor, hyraizyn, ... }:
 
 let
   inherit (builtins) map concatStringsSep;
   inherit (kor) mapAttrsToList concatMapStringsSep;
-  inherit (uyrld.niksLib) toFormatFile;
-
   inherit (hyraizyn.astra) uniksNeim;
 
   stateDir = "/var/lib/private/unbound";
