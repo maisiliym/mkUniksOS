@@ -38,9 +38,11 @@ let
     ++ (optional iuzEdjModule edjModule)
     ++ (optional iuzMetylModule metylModule);
 
+
   nixosArgs = {
     inherit kor uyrld hyraizyn;
     uniksOSRev = self.shortRev;
+    konstynts = import ./konstynts.nix;
   };
 
   ivaliueicyn = ivalNixos {
