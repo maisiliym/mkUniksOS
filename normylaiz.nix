@@ -44,7 +44,6 @@ in
     };
 
     systemPackages = [
-      termite.terminfo
       pkgs.lm_sensors
     ];
   };
