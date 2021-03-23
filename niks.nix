@@ -18,10 +18,6 @@ let
 
 in
 {
-  boot = {
-    kernelParams = [ "consoleblank=300" ];
-  };
-
   environment.etc."hyraizyn.json" = {
     source = jsonHyraizynFail;
     mode = "0600";
