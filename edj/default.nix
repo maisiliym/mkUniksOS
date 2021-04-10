@@ -101,6 +101,7 @@ in
 
     udev = {
       extraRules = ''
+        # What is this for?
         ATTRS{idVendor}=="067b", ATTRS{idProduct}=="2303", GROUP="dialout", MODE="0660"
       '';
     };
