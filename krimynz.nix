@@ -37,6 +37,7 @@ let
           "nixdev"
           "systemd-journal"
           "dialout"
+          "plugdev"
           "storage"
           "libvirtd"
         ]);

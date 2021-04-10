@@ -59,7 +59,16 @@ in
     });
   };
 
+  users.groups.plugdev = { };
+
   services = {
+    udev.extraRules = ''
+      # USBasp - USB programmer for Atmel AVR controllers
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="05dc", GROUP="plugdev"
+      # Pro-micro kp-boot-bootloader - Ergodone keyboard
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="bb05", GROUP="plugdev"
+    '';
+
     xserver = {
       xkbVariant = optionalString iuzColemak "colemak";
       xkbOptions = "caps:ctrl_modifier, altwin:swap_alt_win";
